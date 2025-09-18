@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Order Has Shipped - <%= siteName %></title>
+  <style>
+    /* Reset styles */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      max-width: 150px;
+      height: auto;
+    }
+    
+    /* Content */
+    .content {
+      padding: 0 20px 20px;
+    }
+    
+    h1 {
+      color: #2c3e50;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      margin-bottom: 15px;
+    }
+    
+    /* Order details */
+    .order-details {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    
+    .order-details p {
+      margin: 5px 0;
+    }
+    
+    .order-number {
+      font-weight: bold;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+    
+    .shipping-info {
+      background-color: #e8f4fc;
+      border-left: 4px solid #3498db;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    
+    .shipping-info h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+    
+    .tracking-number {
+      font-weight: bold;
+      font-size: 16px;
+      color: #e67e22;
+    }
+    
+    /* Button */
+    .button {
+      display: inline-block;
+      background-color: #3498db;
+      color: white !important;
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+    
+    .social-links {
+      margin: 15px 0;
+    }
+    
+    .social-links a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="<%= siteUrl %>">
+        <img src="<%= siteLogo %>" alt="<%= siteName %>" class="logo">
+      </a>
+    </div>
+    
+    <div class="content">
+      <h1>Your Order Has Shipped!</h1>
+      
+      <p>Hello <%= user.name %>,</p>
+      
+      <p>Great news! Your order <span class="order-number">#<%= order.orderNumber || order._id %></span> has been shipped and is on its way to you.</p>
+      
+      <div class="shipping-info">
+        <h3>Shipping Information</h3>
+        
+        <% if (trackingInfo && trackingInfo.number) { %>
+          <p><strong>Tracking Number:</strong> <span class="tracking-number"><%= trackingInfo.number %></span></p>
+          <p><strong>Shipping Carrier:</strong> <%= trackingInfo.carrier || 'Standard Shipping' %></p>
+          <p><strong>Estimated Delivery:</strong> <%= trackingInfo.estimatedDelivery ? new Date(trackingInfo.estimatedDelivery).toLocaleDateString() : '3-5 business days' %></p>
+          
+          <% if (trackingInfo.url) { %>
+            <p style="margin-top: 15px;">
+              <a href="<%= trackingInfo.url %>" class="button" target="_blank">Track Your Package</a>
+            </p>
+          <% } %>
+        <% } else { %>
+          <p>Your order is on its way! We'll send you tracking information as soon as it's available.</p>
+        <% } %>
+      </div>
+      
+      <div class="order-details">
+        <p><strong>Order Number:</strong> #<%= order.orderNumber || order._id %></p>
+        <p><strong>Shipped On:</strong> <%= new Date(order.shippedAt || new Date()).toLocaleDateString() %></p>
+        <p><strong>Shipping To:</strong> 
+          <%= order.shippingAddress.address %>, 
+          <% if (order.shippingAddress.address2) { %>
+            <%= order.shippingAddress.address2 %>, 
+          <% } %>
+          <%= order.shippingAddress.city %>, 
+          <%= order.shippingAddress.state %> 
+          <%= order.shippingAddress.postalCode %>, 
+          <%= order.shippingAddress.country %>
+        </p>
+      </div>
+      
+      <p>You can view the status of your order by clicking the button below:</p>
+      
+      <p style="text-align: center;">
+        <a href="<%= siteUrl %>/orders/<%= order._id %>" class="button">View Order Details</a>
+      </p>
+      
+      <p>If you have any questions about your order, please don't hesitate to contact our customer service team at <a href="mailto:<%= supportEmail %>"><%= supportEmail %></a>.</p>
+      
+      <p>Thank you for shopping with us!</p>
+      
+      <p>Best regards,<br>The <%= siteName %> Team</p>
+    </div>
+    
+    <div class="footer">
+      <p>&copy; <%= new Date().getFullYear() %> <%= siteName %>. All rights reserved.</p>
+      
+      <div class="social-links">
+        <a href="<%= socialLinks.facebook %>" target="_blank">Facebook</a>
+        <a href="<%= socialLinks.twitter %>" target="_blank">Twitter</a>
+        <a href="<%= socialLinks.instagram %>" target="_blank">Instagram</a>
+      </div>
+      
+      <p>
+        <a href="<%= siteUrl %>/privacy">Privacy Policy</a> | 
+        <a href="<%= siteUrl %>/terms">Terms of Service</a> | 
+        <a href="<%= siteUrl %>/contact">Contact Us</a>
+      </p>
+      
+      <p>
+        <small>
+          This email was sent to <%= user.email %>. 
+          <a href="<%= unsubscribeUrl %>" style="color: #7f8c8d;">Unsubscribe</a>.
+        </small>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

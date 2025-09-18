@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title><%= subject %></title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; margin-bottom: 30px; }
+    .logo { max-width: 200px; margin-bottom: 20px; }
+    .error-message { background: #fff3f3; color: #d32f2f; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #d32f2f; }
+    .order-details { background: #f9f9f9; padding: 20px; border-radius: 5px; margin: 20px 0; }
+    .button { display: inline-block; padding: 10px 20px; background: #d32f2f; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { margin-top: 40px; font-size: 12px; color: #777; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <% if (logoUrl) { %>
+      <img src="<%= logoUrl %>" alt="<%= siteName %>" class="logo">
+    <% } %>
+    <h1>Payment Failed</h1>
+    <p>Hello <%= user.name %>,</p>
+  </div>
+
+  <div class="error-message">
+    <h3>We couldn't process your payment</h3>
+    <p><%= order.error %></p>
+  </div>
+
+  <div class="order-details">
+    <h2>Order #<%= order.orderNumber %></h2>
+    <p><strong>Order Date:</strong> <%= order.orderDate %></p>
+    <p><strong>Amount:</strong> $<%= order.total %></p>
+    <p><strong>Payment Method:</strong> <%= order.paymentMethod %></p>
+  </div>
+
+  <p>Please update your payment information to complete your order. Your items have been reserved for you, but they won't be shipped until we receive payment.</p>
+
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="<%= retryUrl %>" class="button">Update Payment Method</a>
+  </div>
+
+  <p>If you believe this is a mistake or need assistance, please contact our support team at <a href="mailto:<%= supportEmail %>"><%= supportEmail %></a>.</p>
+
+  <div class="footer">
+    <p>This is an automated message. Please do not reply to this email.</p>
+    <p>&copy; <%= new Date().getFullYear() %> <%= siteName %>. All rights reserved.</p>
+  </div>
+</body>
+</html>

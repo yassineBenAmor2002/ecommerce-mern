@@ -1,0 +1,251 @@
+/* Navbar container */
+.navbar {
+  background-color: #ffffff;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  width: 100%;
+  max-width: 1500px;
+  padding: 0 24px;
+}
+
+/* Logo */
+.navbar-logo {
+  color: #333;
+  justify-self: flex-start;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+/* Mobile menu icon */
+.mobile-menu-icon {
+  display: none;
+  color: #333;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Navigation menu */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+  margin-right: -22px;
+  padding: 0;
+}
+
+.nav-item {
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  color: #333;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-links:hover {
+  color: #4a90e2;
+}
+
+/* Search bar */
+.search-bar-desktop {
+  display: flex;
+  align-items: center;
+  margin: 0 20px;
+  flex: 1;
+  max-width: 500px;
+}
+
+.search-form {
+  display: flex;
+  width: 100%;
+}
+
+.search-form input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.search-form button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 0 15px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.search-form button:hover {
+  background-color: #357abd;
+}
+
+/* Cart icon */
+.cart-icon {
+  position: relative;
+  margin-left: 10px;
+}
+
+.cart-count {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Register button */
+.nav-register {
+  background-color: #4a90e2;
+  color: white !important;
+  border-radius: 4px;
+  margin-left: 10px;
+  transition: all 0.3s;
+}
+
+.nav-register:hover {
+  background-color: #357abd;
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+/* Logout button */
+.btn-logout {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.btn-logout:hover {
+  color: #4a90e2;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 960px) {
+  .navbar {
+    position: relative;
+  }
+
+  .mobile-menu-icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-100%, 60%);
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+    top: 80px;
+    left: -100%;
+    opacity: 1;
+    transition: all 0.5s ease;
+    background-color: #fff;
+    padding: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-menu.active {
+    left: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+
+  .nav-item {
+    height: auto;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .nav-links {
+    text-align: center;
+    padding: 1.5rem 0;
+    width: 100%;
+    display: table;
+    justify-content: center;
+  }
+
+  .search-bar-desktop {
+    display: none;
+  }
+
+  .search-bar-mobile {
+    width: 100%;
+    padding: 0 20px;
+    margin: 10px 0;
+  }
+
+  .search-bar-mobile .search-form {
+    width: 100%;
+  }
+
+  .nav-register {
+    margin: 10px 0;
+    width: 80%;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btn-logout {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .cart-icon {
+    margin: 10px 0;
+  }
+}

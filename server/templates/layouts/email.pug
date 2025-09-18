@@ -1,0 +1,98 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title= subject || 'Email from ' + process.env.APP_NAME
+    style(type='text/css').
+      /* Base styles */
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333333;
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-size-adjust: none;
+        width: 100% !important;
+        height: 100%;
+        background-color: #f4f4f4;
+      }
+      
+      /* Email wrapper */
+      .email-wrapper {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+      }
+      
+      /* Header */
+      .email-header {
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 1px solid #eeeeee;
+      }
+      
+      .email-logo {
+        max-width: 150px;
+        height: auto;
+      }
+      
+      /* Content */
+      .email-content {
+        padding: 20px 0;
+      }
+      
+      /* Footer */
+      .email-footer {
+        text-align: center;
+        padding: 20px 0;
+        border-top: 1px solid #eeeeee;
+        font-size: 12px;
+        color: #777777;
+      }
+      
+      /* Buttons */
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      
+      /* Responsive */
+      @media only screen and (max-width: 600px) {
+        .email-wrapper {
+          width: 100% !important;
+        }
+      }
+  body
+    .email-wrapper
+      .email-header
+        if process.env.APP_LOGO_URL
+          img.email-logo(src=process.env.APP_LOGO_URL, alt=process.env.APP_NAME)
+        else
+          h1= process.env.APP_NAME
+      
+      .email-content
+        block content
+      
+      .email-footer
+        p © #{new Date().getFullYear()} #{process.env.APP_NAME}. All rights reserved.
+        p 
+          | Contact us: 
+          a(href=`mailto:${process.env.EMAIL_SUPPORT || 'support@example.com'}`) #{process.env.EMAIL_SUPPORT || 'support@example.com'}
+        p 
+          | Address: #{process.env.COMPANY_ADDRESS || '123 Main St, City, Country'}
+        p 
+          | 
+          a(href=process.env.APP_URL, style='color: #4CAF50; text-decoration: none;') Visit our website
+          |  | 
+          a(href=`${process.env.APP_URL}/privacy`, style='color: #4CAF50; text-decoration: none;') Privacy Policy
+          |  | 
+          a(href=`${process.env.APP_URL}/terms`, style='color: #4CAF50; text-decoration: none;') Terms of Service

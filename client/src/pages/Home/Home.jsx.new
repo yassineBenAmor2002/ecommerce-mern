@@ -1,0 +1,290 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Container, 
+  Typography, 
+  Button, 
+  Grid, 
+  Card, 
+  CardMedia, 
+  CardContent, 
+  CardActions, 
+  Box,
+  useTheme,
+  useMediaQuery,
+  CircularProgress,
+  Alert
+} from '@mui/material';
+import { getFeaturedProducts } from '../../api/productApi';
+
+const Home = () => {
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await getFeaturedProducts(8);
+        if (data.success) {
+          setFeaturedProducts(data.data);
+        } else {
+          setError(data.message || 'Failed to load featured products');
+        }
+      } catch (err) {
+        setError(err.message || 'An error occurred while fetching featured products');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
+
+  const handleProductClick = (productId) => {
+    navigate(`/products/${productId}`);
+  };
+
+  return (
+    <Box>
+      {/* Hero Section */}
+      <Box 
+        sx={{
+          bgcolor: theme.palette.primary.main,
+          color: 'white',
+          py: 8,
+          mb: 6,
+          textAlign: 'center',
+        }}
+      >
+        <Container maxWidth="md">
+          <Typography 
+            variant={isMobile ? 'h4' : 'h2'} 
+            component="h1" 
+            gutterBottom
+            sx={{ fontWeight: 700 }}
+          >
+            Welcome to E-Commerce Store
+          </Typography>
+          <Typography variant={isMobile ? 'h6' : 'h5'} paragraph>
+            Discover amazing products at the best prices
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="secondary" 
+            size="large"
+            onClick={() => navigate('/products')}
+            sx={{ 
+              mt: 2,
+              px: 4,
+              py: 1.5,
+              fontSize: '1.1rem',
+              fontWeight: 600,
+            }}
+          >
+            Shop Now
+          </Button>
+        </Container>
+      </Box>
+
+      {/* Featured Products */}
+      <Container maxWidth="lg" sx={{ mb: 8 }}>
+        <Typography 
+          variant="h4" 
+          component="h2" 
+          gutterBottom 
+          sx={{ 
+            textAlign: 'center',
+            fontWeight: 600,
+            mb: 6,
+            position: 'relative',
+            '&:after': {
+              content: '""',
+              display: 'block',
+              width: '80px',
+              height: '4px',
+              backgroundColor: theme.palette.primary.main,
+              margin: '16px auto 0',
+              borderRadius: '2px',
+            }
+          }}
+        >
+          Featured Products
+        </Typography>
+
+        {loading ? (
+          <Box display="flex" justifyContent="center" width="100%" my={4}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Box width="100%" mb={4}>
+            <Alert severity="error">{error}</Alert>
+          </Box>
+        ) : (
+          <Grid container spacing={4}>
+            {featuredProducts.map((product) => (
+              <Grid item key={product._id} xs={12} sm={6} md={4} lg={3}>
+                <Card 
+                  sx={{ 
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'transform 0.2s',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: 3,
+                    },
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => handleProductClick(product._id)}
+                >
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={product.images?.[0]?.url || 'https://via.placeholder.com/300x400'}
+                    alt={product.name}
+                    sx={{ objectFit: 'cover' }}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography gutterBottom variant="h6" component="h3" noWrap>
+                      {product.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      {product.category?.name || 'Uncategorized'}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                      <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
+                        ${product.salePrice ? product.salePrice.toFixed(2) : product.price.toFixed(2)}
+                      </Typography>
+                      {product.salePrice && (
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary" 
+                          sx={{ textDecoration: 'line-through', ml: 1 }}
+                        >
+                          ${product.price.toFixed(2)}
+                        </Typography>
+                      )}
+                    </Box>
+                    {product.rating && (
+                      <Box display="flex" alignItems="center" mt={1}>
+                        <Box color="warning.main">
+                          {[...Array(5)].map((_, i) => (
+                            <span key={i}>{i < Math.round(product.rating) ? '★' : '☆'}</span>
+                          ))}
+                        </Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                          ({product.numReviews || 0} reviews)
+                        </Typography>
+                      </Box>
+                    )}
+                  </CardContent>
+                  <CardActions sx={{ p: 2 }}>
+                    <Button 
+                      size="small" 
+                      color="primary"
+                      variant="outlined"
+                      fullWidth
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // TODO: Add to cart functionality
+                      }}
+                    >
+                      Add to Cart
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+        
+        <Box textAlign="center" mt={4}>
+          <Button 
+            variant="contained" 
+            color="primary"
+            size="large"
+            onClick={() => navigate('/products')}
+            sx={{
+              py: 1.5,
+              fontSize: '1.1rem',
+              fontWeight: 600,
+            }}
+          >
+            View All Products
+          </Button>
+        </Box>
+      </Container>
+
+      {/* Features Section */}
+      <Box bgcolor="grey.100" py={8}>
+        <Container maxWidth="lg">
+          <Grid container spacing={4}>
+            {[
+              {
+                icon: '🚚',
+                title: 'Free Shipping',
+                description: 'Free shipping on all orders over $50'
+              },
+              {
+                icon: '💳',
+                title: 'Secure Payment',
+                description: '100% secure payment processing'
+              },
+              {
+                icon: '↩️',
+                title: 'Easy Returns',
+                description: '30-day return policy'
+              },
+              {
+                icon: '📞',
+                title: '24/7 Support',
+                description: 'Dedicated customer support'
+              },
+            ].map((feature, index) => (
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <Box 
+                  sx={{ 
+                    textAlign: 'center',
+                    p: 3,
+                    height: '100%',
+                    backgroundColor: 'white',
+                    borderRadius: 2,
+                    boxShadow: theme.shadows[1],
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-5px)',
+                      boxShadow: theme.shadows[4],
+                    },
+                  }}
+                >
+                  <Box 
+                    sx={{ 
+                      fontSize: '2.5rem',
+                      mb: 2,
+                      lineHeight: 1,
+                    }}
+                  >
+                    {feature.icon}
+                  </Box>
+                  <Typography variant="h6" component="h3" gutterBottom>
+                    {feature.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {feature.description}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+    </Box>
+  );
+};
+
+export default Home;
